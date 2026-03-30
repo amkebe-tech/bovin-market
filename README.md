@@ -124,8 +124,14 @@ boeuf_project/
 5. Passer une commande
 6. Suivre ses commandes dans **"Mes Commandes"**
 
+## Dépôt GitHub
+
+🔗 [https://github.com/amkebe-tech/bovin-market](https://github.com/amkebe-tech/bovin-market)
+
+
 ## Auteur
 
 - **Nom** : Aichatou Mamadou Kebe
+- **GitHub** : [amkebe-tech](https://github.com/amkebe-tech)
 - **Projet** : Projet de classe
 - **Framework** : Django
