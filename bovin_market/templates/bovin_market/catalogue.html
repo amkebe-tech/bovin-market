@@ -1,0 +1,81 @@
+<!-- bovin_market/templates/bovin_market/catalogue.html -->
+{% extends 'bovin_market/base.html' %}
+
+{% block title %}Catalogue - Bovin Market{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>🐂 Catalogue des bœufs</h2>
+    {% if request.user.profil.role == 'vendeur' %}
+        <a href="{% url 'publier_boeuf_etape1' %}" class="btn btn-dark">
+            + Publier un bœuf
+        </a>
+    {% endif %}
+</div>
+
+{% if bovins %}
+    <div class="row">
+        {% for boeuf in bovins %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow h-100">
+
+                <!-- Photo -->
+                {% if boeuf.photo %}
+                    <img src="{{ boeuf.photo.url }}" class="card-img-top"
+                         style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-secondary d-flex align-items-center justify-content-center"
+                         style="height: 200px;">
+                        <span class="text-white fs-1">🐂</span>
+                    </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ boeuf.nom }}</h5>
+                    <p class="text-muted mb-1">⚖️ {{ boeuf.poids_total }} kg</p>
+                    <p class="text-muted mb-1">📅 Abattage : {{ boeuf.date_abattage }}</p>
+
+                    {% if boeuf.type_vente == 'kg' %}
+                        <p class="text-muted mb-1">💰 {{ boeuf.prix_par_kg }} FCFA/kg</p>
+                    {% else %}
+                        <p class="text-muted mb-1">💰 {{ boeuf.prix_par_lot }} FCFA/lot</p>
+                        <p class="text-muted mb-1">📦 {{ boeuf.nombre_lots }} lots de {{ boeuf.poids_lot }}kg</p>
+                    {% endif %}
+
+                    <!-- Stock restant -->
+                    {% if boeuf.est_complet %}
+                        <span class="badge bg-danger">Complet</span>
+                    {% else %}
+                        <span class="badge bg-success">
+                            Disponible — {{ boeuf.stock_restant }}
+                            {% if boeuf.type_vente == 'kg' %}kg restants
+                            {% else %}lots restants{% endif %}
+                        </span>
+                    {% endif %}
+                </div>
+
+                <div class="card-footer">
+                    <a href="{% url 'detail_boeuf' boeuf.id %}"
+                       class="btn btn-outline-dark w-100">
+                        Voir le détail
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+{% else %}
+    <div class="text-center mt-5">
+        <p class="text-muted fs-5">Aucun bœuf disponible pour le moment.</p>
+        {% if request.user.profil.role == 'vendeur' %}
+            <a href="{% url 'publier_boeuf_etape1' %}" class="btn btn-dark mt-2">
+                Publier le premier bœuf
+            </a>
+        {% endif %}
+    </div>
+{% endif %}
+
+{% endblock %}

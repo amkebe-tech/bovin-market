@@ -1,0 +1,142 @@
+{% extends 'bovin_market/base.html' %}
+
+{% block title %}Dashboard Vendeur - Bovin Market{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">📊 Mon Dashboard</h2>
+
+<!-- Mes Boeufs -->
+<div class="card shadow mb-4">
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">🐂 Mes Bœufs publiés</h5>
+        <a href="{% url 'publier_boeuf_etape1' %}" class="btn btn-sm btn-light">
+            + Publier
+        </a>
+    </div>
+    <div class="card-body">
+        {% if bovins %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Poids</th>
+                            <th>Type</th>
+                            <th>Date abattage</th>
+                            <th>Stock restant</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for boeuf in bovins %}
+                        <tr>
+                            <td>{{ boeuf.nom }}</td>
+                            <td>{{ boeuf.poids_total }} kg</td>
+                            <td>{{ boeuf.get_type_vente_display }}</td>
+                            <td>{{ boeuf.date_abattage }}</td>
+                            <td>
+                                {% if boeuf.est_complet %}
+                                    <span class="badge bg-danger">Complet</span>
+                                {% else %}
+                                    {{ boeuf.stock_restant }}
+                                    {% if boeuf.type_vente == 'kg' %}kg{% else %}lots{% endif %}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge 
+                                    {% if boeuf.statut == 'disponible' %}bg-success
+                                    {% elif boeuf.statut == 'complet' %}bg-danger
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ boeuf.statut }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{% url 'detail_boeuf' boeuf.id %}"
+                                   class="btn btn-sm btn-outline-dark">
+                                    Voir
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted text-center">Aucun bœuf publié pour le moment.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Mes Commandes -->
+<div class="card shadow">
+    <div class="card-header bg-dark text-white">
+        <h5 class="mb-0">🛒 Commandes reçues</h5>
+    </div>
+    <div class="card-body">
+        {% if commandes %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Bœuf</th>
+                            <th>Quantité</th>
+                            <th>Prix total</th>
+                            <th>Téléphone</th>
+                            <th>Date</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for commande in commandes %}
+                        <tr>
+                            <td>{{ commande.client.username }}</td>
+                            <td>{{ commande.bovin.nom }}</td>
+                            <td>
+                                {% if commande.kilos %}
+                                    {{ commande.kilos }} kg
+                                {% else %}
+                                    {{ commande.lots }} lot(s)
+                                {% endif %}
+                            </td>
+                            <td>{{ commande.prix_total }} FCFA</td>
+                            <td>{{ commande.telephone }}</td>
+                            <td>{{ commande.date_commande|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                <span class="badge
+                                    {% if commande.statut == 'confirmée' %}bg-success
+                                    {% elif commande.statut == 'annulée' %}bg-danger
+                                    {% else %}bg-warning text-dark{% endif %}">
+                                    {{ commande.statut }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if commande.statut == 'en_attente' %}
+                                    <form method="POST" action="{% url 'changer_statut_commande' commande.id %}" class="d-flex gap-1">
+                                        {% csrf_token %}
+                                        <button name="statut" value="confirmée" class="btn btn-sm btn-success">
+                                            ✅
+                                        </button>
+                                        <button name="statut" value="annulée" class="btn btn-sm btn-danger">
+                                            ❌
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted text-center">Aucune commande reçue pour le moment.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

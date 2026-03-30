@@ -1,0 +1,58 @@
+<!-- bovin_market/templates/bovin_market/publier_etape2.html -->
+{% extends 'bovin_market/base.html' %}
+
+{% block title %}Publier un bœuf - Étape 2{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card shadow">
+            <div class="card-body p-4">
+
+                <!-- Barre de progression -->
+                <div class="mb-4">
+                    <p class="text-muted mb-1">Étape 2 sur 2 — Photo et confirmation</p>
+                    <div class="progress">
+                        <div class="progress-bar bg-dark" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <h4 class="mb-4">📸 Photo et confirmation</h4>
+
+                <!-- Récapitulatif étape 1 -->
+                <div class="alert alert-secondary mb-4">
+                    <h6 class="fw-bold">Récapitulatif :</h6>
+                    <p class="mb-1">🐂 <strong>{{ etape1_data.nom }}</strong></p>
+                    <p class="mb-1">⚖️ {{ etape1_data.poids_total }} kg</p>
+                    <p class="mb-1">📅 Abattage : {{ etape1_data.date_abattage }}</p>
+                    {% if etape1_data.type_vente == 'kg' %}
+                        <p class="mb-0">💰 {{ etape1_data.prix_par_kg }} FCFA/kg</p>
+                    {% else %}
+                        <p class="mb-0">💰 {{ etape1_data.nombre_lots }} lots à {{ etape1_data.prix_par_lot }} FCFA</p>
+                    {% endif %}
+                </div>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+                        <label class="form-label">Photo du bœuf (optionnel)</label>
+                        <input type="file" name="photo" class="form-control" accept="image/*">
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'publier_boeuf_etape1' %}"
+                           class="btn btn-outline-dark w-50">
+                            ← Retour
+                        </a>
+                        <button type="submit" class="btn btn-dark w-50">
+                            ✅ Publier
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

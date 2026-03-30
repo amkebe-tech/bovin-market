@@ -1,0 +1,94 @@
+{% extends 'bovin_market/base.html' %}
+
+{% block title %}Mes Commandes - Bovin Market{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">🛒 Mes Commandes</h2>
+
+{% if commandes %}
+    <div class="row">
+        {% for commande in commandes %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow h-100">
+
+                <!-- Photo du boeuf -->
+                {% if commande.bovin.photo %}
+                    <img src="{{ commande.bovin.photo.url }}"
+                         class="card-img-top"
+                         style="height:150px; object-fit:cover;">
+                {% else %}
+                    <div class="bg-secondary d-flex align-items-center justify-content-center"
+                         style="height:150px;">
+                        <span class="text-white fs-1">🐂</span>
+                    </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ commande.bovin.nom }}</h5>
+
+                    <!-- Quantité commandée -->
+                    <p class="mb-1">
+                        📦 <strong>Quantité :</strong>
+                        {% if commande.kilos %}
+                            {{ commande.kilos }} kg
+                        {% else %}
+                            {{ commande.lots }} lot(s)
+                        {% endif %}
+                    </p>
+
+                    <!-- Prix total -->
+                    <p class="mb-1">
+                        💰 <strong>Prix total :</strong>
+                        {{ commande.prix_total }} FCFA
+                    </p>
+
+                    <!-- Date -->
+                    <p class="mb-1">
+                        📅 <strong>Date :</strong>
+                        {{ commande.date_commande|date:"d/m/Y H:i" }}
+                    </p>
+
+                    <!-- Date abattage -->
+                    <p class="mb-1">
+                        🔪 <strong>Abattage prévu :</strong>
+                        {{ commande.bovin.date_abattage }}
+                    </p>
+
+                    <!-- Vendeur -->
+                    <p class="mb-2">
+                        👤 <strong>Vendeur :</strong>
+                        {{ commande.bovin.vendeur.username }}
+                    </p>
+
+                    <!-- Statut -->
+                    <span class="badge fs-6
+                        {% if commande.statut == 'confirmée' %}bg-success
+                        {% elif commande.statut == 'annulée' %}bg-danger
+                        {% else %}bg-warning text-dark{% endif %}">
+                        {{ commande.statut }}
+                    </span>
+                </div>
+
+                <div class="card-footer">
+                    <a href="{% url 'detail_boeuf' commande.bovin.id %}"
+                       class="btn btn-outline-dark w-100">
+                        Voir le bœuf
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+{% else %}
+    <div class="text-center mt-5">
+        <p class="text-muted fs-5">Vous n'avez pas encore passé de commande.</p>
+        <a href="{% url 'catalogue' %}" class="btn btn-dark mt-2">
+            Voir le catalogue
+        </a>
+    </div>
+{% endif %}
+
+{% endblock %}

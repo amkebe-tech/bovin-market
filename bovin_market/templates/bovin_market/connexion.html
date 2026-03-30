@@ -1,0 +1,52 @@
+<!-- bovin_market/templates/bovin_market/connexion.html -->
+{% extends 'bovin_market/base.html' %}
+
+{% block title %}Connexion - Bovin Market{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="card-title text-center mb-4">🐂 Connexion</h3>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Nom d'utilisateur</label>
+                        <input
+                            type="text"
+                            name="username"
+                            class="form-control"
+                            value="{{ form.username.value|default:'' }}"
+                            required
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mot de passe</label>
+                        <input
+                            type="password"
+                            name="password"
+                            class="form-control"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100">
+                        Se connecter
+                    </button>
+                </form>
+
+                <hr>
+                <p class="text-center mb-0">
+                    Pas encore de compte ?
+                    <a href="{% url 'inscription' %}">S'inscrire</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

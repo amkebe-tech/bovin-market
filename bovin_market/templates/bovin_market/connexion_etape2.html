@@ -1,0 +1,50 @@
+{% extends 'bovin_market/base.html' %}
+
+{% block title %}Connexion - Étape 2{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-body p-4">
+
+                <!-- Barre de progression -->
+                <div class="mb-4">
+                    <p class="text-muted mb-1">Étape 2 sur 2 — Mot de passe</p>
+                    <div class="progress">
+                        <div class="progress-bar bg-dark" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <h3 class="card-title text-center mb-4">🐂 Connexion</h3>
+
+                <!-- Afficher le username -->
+                <div class="alert alert-secondary text-center mb-3">
+                    👤 <strong>{{ username }}</strong>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" name="password"
+                               class="form-control" autofocus required>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100">
+                        Se connecter
+                    </button>
+                </form>
+
+                <hr>
+                <p class="text-center mb-0">
+                    Ce n'est pas vous ?
+                    <a href="{% url 'connexion' %}">Changer d'utilisateur</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

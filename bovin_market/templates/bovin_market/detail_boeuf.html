@@ -1,0 +1,94 @@
+{% extends 'bovin_market/base.html' %}
+
+{% block title %}{{ boeuf.nom }} - Bovin Market{% endblock %}
+
+{% block content %}
+<div class="row">
+
+    <!-- Colonne gauche : photo + infos -->
+    <div class="col-md-6">
+        {% if boeuf.photo %}
+            <img src="{{ boeuf.photo.url }}" class="img-fluid rounded shadow" style="width:100%; height:350px; object-fit:cover;">
+        {% else %}
+            <div class="bg-secondary d-flex align-items-center justify-content-center rounded" style="height:350px;">
+                <span class="text-white" style="font-size:80px;">🐂</span>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Colonne droite : détails -->
+    <div class="col-md-6">
+        <h2>{{ boeuf.nom }}</h2>
+        <p class="text-muted">{{ boeuf.description }}</p>
+        <hr>
+
+        <p>⚖️ <strong>Poids total :</strong> {{ boeuf.poids_total }} kg</p>
+        <p>📅 <strong>Date d'abattage :</strong> {{ boeuf.date_abattage }}</p>
+        <p>👤 <strong>Vendeur :</strong> {{ boeuf.vendeur.username }}</p>
+
+        {% if boeuf.type_vente == 'kg' %}
+            <p>💰 <strong>Prix :</strong> {{ boeuf.prix_par_kg }} FCFA/kg</p>
+        {% else %}
+            <p>📦 <strong>Lots :</strong> {{ boeuf.nombre_lots }} lots de {{ boeuf.poids_lot }} kg</p>
+            <p>💰 <strong>Prix par lot :</strong> {{ boeuf.prix_par_lot }} FCFA</p>
+        {% endif %}
+
+        <!-- Stock restant -->
+        {% if boeuf.est_complet %}
+            <span class="badge bg-danger fs-6">Complet</span>
+        {% else %}
+            <span class="badge bg-success fs-6">
+                Disponible —
+                {{ boeuf.stock_restant }}
+                {% if boeuf.type_vente == 'kg' %}kg restants{% else %}lots restants{% endif %}
+            </span>
+        {% endif %}
+
+        <hr>
+
+        <!-- Formulaire de commande -->
+        {% if not boeuf.est_complet and request.user.profil.role == 'client' %}
+            <h5>🛒 Passer une commande</h5>
+            <form method="POST" action="{% url 'commander' boeuf.id %}">
+                {% csrf_token %}
+
+                {% if boeuf.type_vente == 'kg' %}
+                    <div class="mb-3">
+                        <label class="form-label">Nombre de kg souhaités</label>
+                        <input type="number" name="kilos" step="0.1"
+                               min="1" max="{{ boeuf.stock_restant }}"
+                               class="form-control" required>
+                    </div>
+                {% else %}
+                    <div class="mb-3">
+                        <label class="form-label">Nombre de lots souhaités</label>
+                        <input type="number" name="lots"
+                               min="1" max="{{ boeuf.stock_restant }}"
+                               class="form-control" required>
+                    </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <label class="form-label">Téléphone</label>
+                    <input type="text" name="telephone" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-dark w-100">
+                    Confirmer la commande
+                </button>
+            </form>
+
+        {% elif boeuf.est_complet %}
+            <div class="alert alert-danger">
+                Ce bœuf est entièrement commandé. 😔
+            </div>
+
+        {% elif request.user.profil.role == 'vendeur' %}
+            <div class="alert alert-secondary">
+                Vous êtes le vendeur de cet animal.
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

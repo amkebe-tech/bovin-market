@@ -1,0 +1,121 @@
+<!-- bovin_market/templates/bovin_market/publier_etape1.html -->
+{% extends 'bovin_market/base.html' %}
+
+{% block title %}Publier un bœuf - Étape 1{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card shadow">
+            <div class="card-body p-4">
+
+                <!-- Barre de progression -->
+                <div class="mb-4">
+                    <p class="text-muted mb-1">Étape 1 sur 2 — Informations générales</p>
+                    <div class="progress">
+                        <div class="progress-bar bg-dark" style="width: 50%"></div>
+                    </div>
+                </div>
+
+                <h4 class="mb-4">🐂 Informations du bœuf</h4>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Nom du bœuf</label>
+                        <input type="text" name="nom" class="form-control"
+                               value="{{ form.nom.value|default:'' }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="3">{{ form.description.value|default:'' }}</textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Poids total (kg)</label>
+                            <input type="number" step="0.1" name="poids_total"
+                                   class="form-control"
+                                   value="{{ form.poids_total.value|default:'' }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Date d'abattage</label>
+                            <input type="date" name="date_abattage" class="form-control"
+                                   value="{{ form.date_abattage.value|default:'' }}" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Type de vente</label>
+                        <select name="type_vente" class="form-select" id="type_vente">
+                            <option value="kg" {% if form.type_vente.value == 'kg' %}selected{% endif %}>Par Kilogramme</option>
+                            <option value="lot" {% if form.type_vente.value == 'lot' %}selected{% endif %}>Par Lot</option>
+                        </select>
+                    </div>
+
+                    <!-- Champs vente par kg -->
+                    <div id="section_kg">
+                        <div class="mb-3">
+                            <label class="form-label">Prix par kg (FCFA)</label>
+                            <input type="number" step="0.01" name="prix_par_kg"
+                                   class="form-control"
+                                   value="{{ form.prix_par_kg.value|default:'' }}">
+                        </div>
+                    </div>
+
+                    <!-- Champs vente par lot -->
+                    <div id="section_lot" style="display:none;">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Poids d'un lot (kg)</label>
+                                <input type="number" step="0.1" name="poids_lot"
+                                       class="form-control"
+                                       value="{{ form.poids_lot.value|default:'' }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Nombre de lots</label>
+                                <input type="number" name="nombre_lots"
+                                       class="form-control"
+                                       value="{{ form.nombre_lots.value|default:'' }}">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Prix par lot (FCFA)</label>
+                                <input type="number" step="0.01" name="prix_par_lot"
+                                       class="form-control"
+                                       value="{{ form.prix_par_lot.value|default:'' }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100">
+                        Suivant →
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script pour afficher/cacher les sections -->
+<script>
+    const select = document.getElementById('type_vente');
+    const sectionKg = document.getElementById('section_kg');
+    const sectionLot = document.getElementById('section_lot');
+
+    function updateSections() {
+        if (select.value === 'kg') {
+            sectionKg.style.display = 'block';
+            sectionLot.style.display = 'none';
+        } else {
+            sectionKg.style.display = 'none';
+            sectionLot.style.display = 'block';
+        }
+    }
+
+    select.addEventListener('change', updateSections);
+    updateSections(); // au chargement
+</script>
+{% endblock %}

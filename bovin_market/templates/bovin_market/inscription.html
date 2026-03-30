@@ -1,0 +1,75 @@
+<!-- bovin_market/templates/bovin_market/inscription.html -->
+{% extends 'bovin_market/base.html' %}
+
+{% block title %}Inscription - Bovin Market{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="card-title text-center mb-4">🐂 Créer un compte</h3>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Nom d'utilisateur</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Téléphone</label>
+                        <input type="text" name="telephone" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Je suis</label>
+                        <select name="role" class="form-select">
+                            <option value="client">Client</option>
+                            <option value="vendeur">Vendeur</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" name="password1" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Confirmer le mot de passe</label>
+                        <input type="password" name="password2" class="form-control" required>
+                    </div>
+
+                    <!-- Affichage des erreurs du formulaire -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <p class="mb-0">{{ error }}</p>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn btn-dark w-100">
+                        Créer mon compte
+                    </button>
+                </form>
+
+                <hr>
+                <p class="text-center mb-0">
+                    Déjà un compte ?
+                    <a href="{% url 'connexion' %}">Se connecter</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

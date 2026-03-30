@@ -1,0 +1,56 @@
+<!-- bovin_market/templates/bovin_market/base.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bovin Market{% endblock %}</title>
+    <!-- Bootstrap pour un design rapide et propre -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">🐂 Bovin Market</a>
+            <div class="navbar-nav ms-auto">
+                {% if request.user.is_authenticated %}
+                    <span class="navbar-text text-white me-3">
+                        Bonjour, {{ request.user.username }}
+                    </span>
+                    {% if request.user.profil.role == 'vendeur' %}
+                        <a class="nav-link text-white" href="{% url 'dashboard_vendeur' %}">Dashboard</a>
+                    {% else %}
+                        <a class="nav-link text-white" href="{% url 'mes_commandes' %}">Mes Commandes</a>
+                    {% endif %}
+                    <a class="nav-link text-white" href="{% url 'catalogue' %}">Catalogue</a>
+                    <a class="nav-link text-white" href="{% url 'deconnexion' %}">Déconnexion</a>
+                {% else %}
+                    <a class="nav-link text-white" href="{% url 'connexion' %}">Connexion</a>
+                    <a class="nav-link text-white" href="{% url 'inscription' %}">Inscription</a>
+                {% endif %}
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages (erreurs, succès...) -->
+    <div class="container mt-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

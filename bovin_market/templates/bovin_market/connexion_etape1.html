@@ -1,0 +1,46 @@
+{% extends 'bovin_market/base.html' %}
+
+{% block title %}Connexion - Étape 1{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-body p-4">
+
+                <!-- Barre de progression -->
+                <div class="mb-4">
+                    <p class="text-muted mb-1">Étape 1 sur 2 — Identifiant</p>
+                    <div class="progress">
+                        <div class="progress-bar bg-dark" style="width: 50%"></div>
+                    </div>
+                </div>
+
+                <h3 class="card-title text-center mb-4">🐂 Connexion</h3>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Nom d'utilisateur</label>
+                        <input type="text" name="username" class="form-control"
+                               value="{{ form.username.value|default:'' }}"
+                               autofocus required>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100">
+                        Suivant →
+                    </button>
+                </form>
+
+                <hr>
+                <p class="text-center mb-0">
+                    Pas encore de compte ?
+                    <a href="{% url 'inscription' %}">S'inscrire</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
