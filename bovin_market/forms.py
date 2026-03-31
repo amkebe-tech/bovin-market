@@ -84,6 +84,17 @@ class BovinEtape1Form(forms.Form):
         widget=forms.DateInput(attrs={'type': 'date'}),
         label='Date d\'abattage'
     )
+    race = forms.ChoiceField(
+    choices=[
+        ('zebu', 'Zébu'),
+        ('gobra', 'Gobra'),
+        ('djakoré', 'Djakoré'),
+        ('ndama', 'N\'Dama'),
+        ('metis', 'Métis'),
+        ('autre', 'Autre'),
+    ],
+    label='Race'
+)
 
 
 class BovinEtape2Form(forms.Form):
@@ -91,3 +102,17 @@ class BovinEtape2Form(forms.Form):
         required=False,
         label='Photo du bœuf'
     )
+
+
+class BovinModifierForm(forms.ModelForm):
+    class Meta:
+        model = Bovin
+        fields = [
+        'nom', 'race', 'description', 'photo', 'poids_total',
+        'type_vente', 'prix_par_kg', 'prix_par_lot',
+        'poids_lot', 'nombre_lots', 'date_abattage', 'statut'
+    ]
+        widgets = {
+            'date_abattage': forms.DateInput(attrs={'type': 'date'}),
+            'description': forms.Textarea(attrs={'rows': 3}),
+        }

@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h2 class="mb-4">📊 Mon Dashboard</h2>
+<h2 class="mb-4"> Mon Dashboard</h2>
 
 <!-- Mes Boeufs -->
 <div class="card shadow mb-4">
@@ -52,11 +52,11 @@
                                     {{ boeuf.statut }}
                                 </span>
                             </td>
-                            <td>
+                           <td>
                                 <a href="{% url 'detail_boeuf' boeuf.id %}"
-                                   class="btn btn-sm btn-outline-gold">
-                                    Voir
-                                </a>
+                                class="btn btn-sm btn-outline-gold">Voir</a>
+                                <a href="{% url 'modifier_boeuf' boeuf.id %}"
+                                class="btn btn-sm btn-gold">✏️</a>
                             </td>
                         </tr>
                         {% endfor %}

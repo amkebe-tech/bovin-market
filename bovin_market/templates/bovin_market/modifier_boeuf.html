@@ -1,48 +1,57 @@
-<!-- bovin_market/templates/bovin_market/publier_etape1.html -->
 {% extends 'bovin_market/base.html' %}
 
-{% block title %}Publier un bœuf - Étape 1{% endblock %}
+{% block title %}Modifier {{ boeuf.nom }}{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-7">
         <div class="card shadow">
+            <div class="card-header">
+                <h5 class="mb-0 text-white">✏️ Modifier {{ boeuf.nom }}</h5>
+            </div>
             <div class="card-body p-4">
 
-                <!-- Barre de progression -->
-                <div class="mb-4">
-                    <p class="text-muted mb-1">Étape 1 sur 2 — Informations générales</p>
-                    <div class="progress">
-                        <div class="progress-bar bg-dark" style="width: 50%"></div>
-                    </div>
-                </div>
-
-                <h4 class="mb-4">🐂 Informations du bœuf</h4>
-
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
 
                     <div class="mb-3">
                         <label class="form-label">Nom du bœuf</label>
                         <input type="text" name="nom" class="form-control"
-                               value="{{ form.nom.value|default:'' }}" required>
+                               value="{{ form.nom.value }}" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Race</label>
                         <select name="race" class="form-select">
-                            <option value="zebu">Zébu</option>
-                            <option value="gobra">Gobra</option>
-                            <option value="djakoré">Djakoré</option>
-                            <option value="ndama">N'Dama</option>
-                            <option value="metis">Métis</option>
-                            <option value="autre">Autre</option>
+                            <option value="zebu" {% if form.race.value == 'zebu' %}selected{% endif %}>Zébu</option>
+                            <option value="gobra" {% if form.race.value == 'gobra' %}selected{% endif %}>Gobra</option>
+                            <option value="djakoré" {% if form.race.value == 'djakoré' %}selected{% endif %}>Djakoré</option>
+                            <option value="ndama" {% if form.race.value == 'ndama' %}selected{% endif %}>N'Dama</option>
+                            <option value="metis" {% if form.race.value == 'metis' %}selected{% endif %}>Métis</option>
+                            <option value="autre" {% if form.race.value == 'autre' %}selected{% endif %}>Autre</option>
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Description</label>
-                        <textarea name="description" class="form-control" rows="3">{{ form.description.value|default:'' }}</textarea>
+                        <textarea name="description" class="form-control" rows="3">{{ form.description.value }}</textarea>
+                    </div>
+
+
+                    <!-- Photo actuelle -->
+                    {% if boeuf.photo %}
+                        <div class="mb-3">
+                            <label class="form-label">Photo actuelle</label>
+                            <div>
+                                <img src="{{ boeuf.photo.url }}"
+                                     style="height:150px; object-fit:cover; border-radius:8px;">
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Nouvelle photo</label>
+                        <input type="file" name="photo" class="form-control" accept="image/*">
                     </div>
 
                     <div class="row">
@@ -50,12 +59,13 @@
                             <label class="form-label">Poids total (kg)</label>
                             <input type="number" step="0.1" name="poids_total"
                                    class="form-control"
-                                   value="{{ form.poids_total.value|default:'' }}" required>
+                                   value="{{ form.poids_total.value }}" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Date d'abattage</label>
-                            <input type="date" name="date_abattage" class="form-control"
-                                   value="{{ form.date_abattage.value|default:'' }}" required>
+                            <input type="date" name="date_abattage"
+                                   class="form-control"
+                                   value="{{ form.date_abattage.value }}" required>
                         </div>
                     </div>
 
@@ -67,43 +77,56 @@
                         </select>
                     </div>
 
-                    <!-- Champs vente par kg -->
-                    <div id="section_kg">
+                    <div id="section_kg" {% if form.type_vente.value == 'lot' %}style="display:none"{% endif %}>
                         <div class="mb-3">
                             <label class="form-label">Prix par kg (FCFA)</label>
                             <input type="number" step="0.01" name="prix_par_kg"
                                    class="form-control"
-                                   value="{{ form.prix_par_kg.value|default:'' }}">
+                                   value="{{ form.prix_par_kg.value }}">
                         </div>
                     </div>
 
-                    <!-- Champs vente par lot -->
-                    <div id="section_lot" style="display:none;">
+                    <div id="section_lot" {% if form.type_vente.value == 'kg' %}style="display:none"{% endif %}>
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Poids d'un lot (kg)</label>
                                 <input type="number" step="0.1" name="poids_lot"
                                        class="form-control"
-                                       value="{{ form.poids_lot.value|default:'' }}">
+                                       value="{{ form.poids_lot.value }}">
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Nombre de lots</label>
                                 <input type="number" name="nombre_lots"
                                        class="form-control"
-                                       value="{{ form.nombre_lots.value|default:'' }}">
+                                       value="{{ form.nombre_lots.value }}">
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Prix par lot (FCFA)</label>
                                 <input type="number" step="0.01" name="prix_par_lot"
                                        class="form-control"
-                                       value="{{ form.prix_par_lot.value|default:'' }}">
+                                       value="{{ form.prix_par_lot.value }}">
                             </div>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-gold w-100">
-                        Suivant →
-                    </button>
+                    <div class="mb-3">
+                        <label class="form-label">Statut</label>
+                        <select name="statut" class="form-select">
+                            <option value="disponible" {% if form.statut.value == 'disponible' %}selected{% endif %}>Disponible</option>
+                            <option value="complet" {% if form.statut.value == 'complet' %}selected{% endif %}>Complet</option>
+                            <option value="abattu" {% if form.statut.value == 'abattu' %}selected{% endif %}>Abattu</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'detail_boeuf' boeuf.id %}"
+                           class="btn btn-outline-gold w-50">
+                            ← Annuler
+                        </a>
+                        <button type="submit" class="btn btn-gold w-50">
+                             Sauvegarder
+                        </button>
+                    </div>
                 </form>
 
             </div>
@@ -111,7 +134,6 @@
     </div>
 </div>
 
-<!-- Script pour afficher/cacher les sections -->
 <script>
     const select = document.getElementById('type_vente');
     const sectionKg = document.getElementById('section_kg');
@@ -128,6 +150,5 @@
     }
 
     select.addEventListener('change', updateSections);
-    updateSections(); // au chargement
 </script>
 {% endblock %}

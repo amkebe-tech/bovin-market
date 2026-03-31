@@ -23,4 +23,5 @@ urlpatterns = [
     path('commande/<int:commande_id>/statut/', views.changer_statut_commande, name='changer_statut_commande'),
     path('mes-commandes/', views.mes_commandes, name='mes_commandes'),
     path('profil/', views.profil, name='profil'),
+    path('boeuf/<int:boeuf_id>/modifier/', views.modifier_boeuf, name='modifier_boeuf'),
 ]

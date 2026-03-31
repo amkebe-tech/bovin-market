@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import Bovin, Commande
-from .forms import ConnexionEtape2Form, ConnexionEtape1Form ,InscriptionForm, BovinEtape1Form, BovinEtape2Form
+from .forms import BovinModifierForm, ConnexionEtape2Form, ConnexionEtape1Form ,InscriptionForm, BovinEtape1Form, BovinEtape2Form
 
 
 def inscription(request):
@@ -118,6 +118,7 @@ def publier_boeuf_etape1(request):
             # Convertir tous les types non-JSON en string
             request.session['boeuf_etape1'] = {
                 'nom': data['nom'],
+                'race': data['race'],
                 'description': data.get('description', ''),
                 'poids_total': float(data['poids_total']),
                 'type_vente': data['type_vente'],
@@ -152,6 +153,7 @@ def publier_boeuf_etape2(request):
             boeuf = Bovin.objects.create(
                 vendeur=request.user,
                 nom=etape1['nom'],
+                race=etape1['race'],
                 poids_total=etape1['poids_total'],
                 type_vente=etape1['type_vente'],
                 prix_par_kg=etape1.get('prix_par_kg'),
@@ -294,3 +296,23 @@ def profil(request):
         return redirect('profil')
 
     return render(request, 'bovin_market/profil.html')
+
+
+
+@login_required
+def modifier_boeuf(request, boeuf_id):
+    boeuf = get_object_or_404(Bovin, id=boeuf_id, vendeur=request.user)
+
+    if request.method == 'POST':
+        form = BovinModifierForm(request.POST, request.FILES, instance=boeuf)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'"{boeuf.nom}" modifié avec succès !')
+            return redirect('detail_boeuf', boeuf_id=boeuf.id)
+    else:
+        form = BovinModifierForm(instance=boeuf)
+
+    return render(request, 'bovin_market/modifier_boeuf.html', {
+        'form': form,
+        'boeuf': boeuf
+    })

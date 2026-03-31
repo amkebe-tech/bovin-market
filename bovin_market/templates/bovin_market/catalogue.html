@@ -61,6 +61,7 @@
 
                 <div class="card-body">
                     <h5 class="card-title">{{ boeuf.nom }}</h5>
+                    <p class="text-muted mb-1">🐄 <strong>Race :</strong> {{ boeuf.get_race_display }}</p>
                     <p class="text-muted mb-1">⚖️ {{ boeuf.poids_total }} kg</p>
                     <p class="text-muted mb-1">📅 Abattage : {{ boeuf.date_abattage }}</p>
 

@@ -17,6 +17,15 @@ class Bovin(models.Model):
         ('abattu', 'Abattu'),
     ]
 
+    RACE_CHOICES = [
+    ('zebu', 'Zébu'),
+    ('gobra', 'Gobra'),
+    ('djakoré', 'Djakoré'),
+    ('ndama', 'N\'Dama'),
+    ('metis', 'Métis'),
+    ('autre', 'Autre'),
+]
+
     # Infos de base
     vendeur = models.ForeignKey(
         User,
@@ -24,6 +33,7 @@ class Bovin(models.Model):
         related_name='bovins'
     )
     nom = models.CharField(max_length=100)
+    race = models.CharField(max_length=50, choices=RACE_CHOICES, default='zebu', verbose_name='Race')
     description = models.TextField(blank=True)
     photo = models.ImageField(upload_to='photos_bovin/', blank=True, null=True)
     date_abattage = models.DateField()
