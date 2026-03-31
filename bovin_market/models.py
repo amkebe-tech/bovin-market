@@ -163,3 +163,13 @@ class Profil(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
+
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+@receiver(post_save, sender=User)
+def creer_profil(sender, instance, created, **kwargs):
+    if created:
+        if not hasattr(instance, 'profil'):
+            Profil.objects.create(user=instance, role='client')

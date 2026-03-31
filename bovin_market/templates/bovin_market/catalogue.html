@@ -16,10 +16,10 @@
                         placeholder="Rechercher un bœuf..."
                         value="{{ recherche }}">
                     <button type="submit" class="btn btn-dark btn-lg">
-                        🔍 Rechercher
+                        Rechercher
                     </button>
                     {% if recherche %}
-                        <a href="{% url 'catalogue' %}" class="btn btn-outline-dark btn-lg">
+                        <a href="{% url 'catalogue' %}" class="btn btn-outline-gold btn-lg">
                             ✕
                         </a>
                     {% endif %}
@@ -36,7 +36,7 @@
         </p>
     {% endif %}
     {% if request.user.profil.role == 'vendeur' %}
-        <a href="{% url 'publier_boeuf_etape1' %}" class="btn btn-dark">
+        <a href="{% url 'publier_boeuf_etape1' %}" class="btn btn-gold">
             + Publier un bœuf
         </a>
     {% endif %}
