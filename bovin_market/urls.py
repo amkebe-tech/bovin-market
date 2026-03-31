@@ -1,5 +1,10 @@
 from django.urls import path
 from . import views
+from django.contrib import admin
+
+admin.site.site_header = "🐂 Bovin Market Administration"
+admin.site.site_title = "Bovin Market"
+admin.site.index_title = "Tableau de bord administrateur"
 
 urlpatterns = [
     path('inscription/', views.inscription, name='inscription'),
@@ -17,4 +22,5 @@ urlpatterns = [
     path('dashboard/', views.dashboard_vendeur, name='dashboard_vendeur'),
     path('commande/<int:commande_id>/statut/', views.changer_statut_commande, name='changer_statut_commande'),
     path('mes-commandes/', views.mes_commandes, name='mes_commandes'),
+    path('profil/', views.profil, name='profil'),
 ]

@@ -15,21 +15,22 @@
         <div class="container">
             <a class="navbar-brand" href="#">🐂 Bovin Market</a>
             <div class="navbar-nav ms-auto">
-                {% if request.user.is_authenticated %}
-                    <span class="navbar-text text-white me-3">
-                        Bonjour, {{ request.user.username }}
-                    </span>
-                    {% if request.user.profil.role == 'vendeur' %}
-                        <a class="nav-link text-white" href="{% url 'dashboard_vendeur' %}">Dashboard</a>
-                    {% else %}
-                        <a class="nav-link text-white" href="{% url 'mes_commandes' %}">Mes Commandes</a>
-                    {% endif %}
-                    <a class="nav-link text-white" href="{% url 'catalogue' %}">Catalogue</a>
-                    <a class="nav-link text-white" href="{% url 'deconnexion' %}">Déconnexion</a>
-                {% else %}
-                    <a class="nav-link text-white" href="{% url 'connexion' %}">Connexion</a>
-                    <a class="nav-link text-white" href="{% url 'inscription' %}">Inscription</a>
-                {% endif %}
+        {% if request.user.is_authenticated %}
+            <span class="navbar-text text-white me-3">
+                Bonjour, {{ request.user.username }}
+            </span>
+            {% if request.user.profil.role == 'vendeur' %}
+                <a class="nav-link text-white" href="{% url 'dashboard_vendeur' %}">Dashboard</a>
+            {% else %}
+                <a class="nav-link text-white" href="{% url 'mes_commandes' %}">Mes Commandes</a>
+            {% endif %}
+            <a class="nav-link text-white" href="{% url 'catalogue' %}">Catalogue</a>
+            <a class="nav-link text-white" href="{% url 'profil' %}">Mon Profil</a>
+            <a class="nav-link text-white" href="{% url 'deconnexion' %}">Déconnexion</a>
+        {% else %}
+            <a class="nav-link text-white" href="{% url 'connexion' %}">Connexion</a>
+            <a class="nav-link text-white" href="{% url 'inscription' %}">Inscription</a>
+        {% endif %}
 
             </div>
         </div>

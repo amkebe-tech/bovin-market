@@ -128,3 +128,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = '/connexion/'
 LOGIN_REDIRECT_URL = '/catalogue/'
 LOGOUT_REDIRECT_URL = '/connexion/'
+
+# Personnalisation admin
+ADMIN_SITE_HEADER = "Bovin Market Administration"
+ADMIN_SITE_TITLE = "Bovin Market"
+ADMIN_INDEX_TITLE = "Tableau de bord"

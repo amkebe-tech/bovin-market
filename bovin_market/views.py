@@ -91,9 +91,19 @@ def deconnexion(request):
 
 
 @login_required
+@login_required
 def catalogue(request):
     bovins = Bovin.objects.filter(statut='disponible').order_by('-date_publication')
-    return render(request, 'bovin_market/catalogue.html', {'bovins': bovins})
+    
+    # Recherche
+    recherche = request.GET.get('q', '')
+    if recherche:
+        bovins = bovins.filter(nom__icontains=recherche)
+
+    return render(request, 'bovin_market/catalogue.html', {
+        'bovins': bovins,
+        'recherche': recherche
+    })
 
 
 @login_required
@@ -265,4 +275,22 @@ def mes_commandes(request):
     })
 
 
-    
+@login_required
+def profil(request):
+    if request.method == 'POST':
+        # Mettre à jour les infos
+        user = request.user
+        user.first_name = request.POST.get('first_name', '')
+        user.last_name = request.POST.get('last_name', '')
+        user.email = request.POST.get('email', '')
+        user.save()
+
+        # Mettre à jour le profil
+        profil = user.profil
+        profil.telephone = request.POST.get('telephone', '')
+        profil.save()
+
+        messages.success(request, 'Profil mis à jour avec succès !')
+        return redirect('profil')
+
+    return render(request, 'bovin_market/profil.html')
